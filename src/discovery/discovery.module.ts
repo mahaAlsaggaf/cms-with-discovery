@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DiscoveryController } from './discovery.controller';
 import { DiscoveryService } from './discovery.service';
-import { Series } from '../series/entities/series.entity';
-import { Episode } from '../episodes/entities/episode.entity';
+import { Series } from '../cms/series/entities/series.entity';
+import { Episode } from '../cms/episodes/entities/episode.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Series, Episode])],

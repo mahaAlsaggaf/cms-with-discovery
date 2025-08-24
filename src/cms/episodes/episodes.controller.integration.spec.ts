@@ -7,7 +7,7 @@ import { SeriesModule } from '../series/series.module';
 import { EpisodesModule } from './episodes.module';
 import { Series } from '../series/entities/series.entity';
 import { Episode } from './entities/episode.entity';
-import databaseConfig from '../config/database.config';
+import databaseConfig from '../../config/database.config';
 
 describe('EpisodesController (Integration)', () => {
   let app: INestApplication;

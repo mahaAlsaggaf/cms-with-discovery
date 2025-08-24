@@ -3,8 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SeriesModule } from './series/series.module';
-import { EpisodesModule } from './episodes/episodes.module';
+import { CmsModule } from './cms/cms.module';
 import { DiscoveryModule } from './discovery/discovery.module';
 import databaseConfig from './config/database.config';
 
@@ -25,8 +24,7 @@ import databaseConfig from './config/database.config';
         return dbConfig;
       },
     }),
-    SeriesModule, 
-    EpisodesModule,
+    CmsModule,
     DiscoveryModule
   ],
   controllers: [AppController],

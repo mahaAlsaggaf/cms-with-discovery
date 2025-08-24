@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Series } from '../series/entities/series.entity';
-import { Episode } from '../episodes/entities/episode.entity';
+import { Series } from '../cms/series/entities/series.entity';
+import { Episode } from '../cms/episodes/entities/episode.entity';
 
 export interface SearchParams {
   query: string;

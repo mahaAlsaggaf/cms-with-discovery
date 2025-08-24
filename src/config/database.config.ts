@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Series } from '../series/entities/series.entity';
-import { Episode } from '../episodes/entities/episode.entity';
+import { Series } from '../cms/series/entities/series.entity';
+import { Episode } from '../cms/episodes/entities/episode.entity';
 
 export default registerAs('database', (): TypeOrmModuleOptions => ({
   type: 'postgres',

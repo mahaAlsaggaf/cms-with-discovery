@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { DiscoveryService } from './discovery.service';
-import { Series } from '../series/entities/series.entity';
-import { Episode } from '../episodes/entities/episode.entity';
+import { Series } from '../cms/series/entities/series.entity';
+import { Episode } from '../cms/episodes/entities/episode.entity';
 
 describe('DiscoveryService', () => {
   let service: DiscoveryService;

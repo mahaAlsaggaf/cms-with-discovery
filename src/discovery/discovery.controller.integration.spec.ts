@@ -4,10 +4,9 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DiscoveryModule } from './discovery.module';
-import { SeriesModule } from '../series/series.module';
-import { EpisodesModule } from '../episodes/episodes.module';
-import { Series } from '../series/entities/series.entity';
-import { Episode } from '../episodes/entities/episode.entity';
+import { CmsModule } from '../cms/cms.module';
+import { Series } from '../cms/series/entities/series.entity';
+import { Episode } from '../cms/episodes/entities/episode.entity';
 import databaseConfig from '../config/database.config';
 
 describe('DiscoveryController (Integration)', () => {
@@ -36,8 +35,7 @@ describe('DiscoveryController (Integration)', () => {
           }),
         }),
         DiscoveryModule,
-        SeriesModule,
-        EpisodesModule,
+        CmsModule,
       ],
     }).compile();
 

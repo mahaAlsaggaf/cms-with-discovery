@@ -48,6 +48,6 @@ export class Series {
   @Column({ type: 'timestamp', nullable: true })
   datePublished: Date;
 
-  @OneToMany(() => Episode, episode => episode.series, {eager: true})
-  episodes: Episode[];
+  @OneToMany('Episode', 'series', {eager: true})
+  episodes: any[];
 }

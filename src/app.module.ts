@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SeriesModule } from './series/series.module';
 import { EpisodesModule } from './episodes/episodes.module';
+import { DiscoveryModule } from './discovery/discovery.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -25,7 +26,8 @@ import databaseConfig from './config/database.config';
       },
     }),
     SeriesModule, 
-    EpisodesModule
+    EpisodesModule,
+    DiscoveryModule
   ],
   controllers: [AppController],
   providers: [AppService],

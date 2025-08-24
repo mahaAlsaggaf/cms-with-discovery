@@ -73,4 +73,57 @@ export class SeriesService {
       order: { datePublished: 'DESC' },
     });
   }
+
+  // Search functionality matching Thmanyah API pattern
+  async search(params: {
+    query: string;
+    from: number;
+    size: number;
+    type: string;
+  }): Promise<{
+    series: Series[];
+    total: number;
+    from: number;
+    size: number;
+  }> {
+    const { query, from, size, type } = params;
+
+    // Build search query
+    const queryBuilder = this.seriesRepository
+      .createQueryBuilder('series')
+      .leftJoinAndSelect('series.episodes', 'episodes');
+
+    // Add text search if query provided
+    if (query && query.trim()) {
+      queryBuilder.where(
+        '(series.title ILIKE :query OR series.description ILIKE :query OR series.category ILIKE :query)',
+        { query: `%${query}%` }
+      );
+    }
+
+    // Filter by type if specified (podcast/documentary)
+    if (type && type !== 'series') {
+      queryBuilder.andWhere('series.type = :seriesType', { seriesType: type });
+    }
+
+    // Only show published content
+    queryBuilder.andWhere('series.isPublished = :published', { published: true });
+
+    // Get total count for pagination
+    const total = await queryBuilder.getCount();
+
+    // Apply pagination and ordering
+    const series = await queryBuilder
+      .orderBy('series.datePublished', 'DESC')
+      .skip(from)
+      .take(size)
+      .getMany();
+
+    return {
+      series,
+      total,
+      from,
+      size,
+    };
+  }
 }

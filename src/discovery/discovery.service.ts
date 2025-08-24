@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { Series } from '../cms/series/entities/series.entity';
 import { Episode } from '../cms/episodes/entities/episode.entity';
 
@@ -25,20 +27,35 @@ export class DiscoveryService {
     private seriesRepository: Repository<Series>,
     @InjectRepository(Episode)
     private episodeRepository: Repository<Episode>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   // Universal search endpoint - searches both series and episodes
   async search(params: SearchParams): Promise<SearchResult<Series | Episode>> {
     const { query, from, size, type } = params;
+    
+    // Create cache key based on search parameters
+    const cacheKey = `search:${JSON.stringify(params)}`;
+    
+    // Try to get from cache first
+    const cachedResult = await this.cacheManager.get<SearchResult<Series | Episode>>(cacheKey);
+    if (cachedResult) {
+      return cachedResult;
+    }
 
+    let result: SearchResult<Series | Episode>;
     if (type === 'episode') {
-      return this.searchEpisodes(params);
+      result = await this.searchEpisodes(params);
     } else if (type === 'series' || type === 'podcast' || type === 'documentary') {
-      return this.searchSeries(params);
+      result = await this.searchSeries(params);
     } else {
       // Search both and combine results
-      return this.searchAll(params);
+      result = await this.searchAll(params);
     }
+    
+    // Cache the result for 5 minutes
+    await this.cacheManager.set(cacheKey, result, 300000);
+    return result;
   }
 
   // Search episodes only
@@ -160,6 +177,18 @@ export class DiscoveryService {
     featuredSeries: Series[];
     recentEpisodes: Episode[];
   }> {
+    // Create cache key based on type parameter
+    const cacheKey = `featured:${type || 'all'}`;
+    
+    // Try to get from cache first
+    const cachedResult = await this.cacheManager.get<{
+      featuredSeries: Series[];
+      recentEpisodes: Episode[];
+    }>(cacheKey);
+    if (cachedResult) {
+      return cachedResult;
+    }
+
     const seriesQuery = this.seriesRepository
       .createQueryBuilder('series')
       .leftJoinAndSelect('series.episodes', 'episodes', 'episodes.isPublished = :episodePublished', { episodePublished: true })
@@ -189,14 +218,27 @@ export class DiscoveryService {
       .take(20)
       .getMany();
 
-    return {
+    const result = {
       featuredSeries,
       recentEpisodes,
     };
+    
+    // Cache the result for 10 minutes (featured content changes less frequently)
+    await this.cacheManager.set(cacheKey, result, 600000);
+    return result;
   }
 
   // Get categories for filtering
   async getCategories(): Promise<{ categories: string[] }> {
+    // Create cache key for categories
+    const cacheKey = 'categories:all';
+    
+    // Try to get from cache first
+    const cachedResult = await this.cacheManager.get<{ categories: string[] }>(cacheKey);
+    if (cachedResult) {
+      return cachedResult;
+    }
+
     const categories = await this.seriesRepository
       .createQueryBuilder('series')
       .select('DISTINCT series.category', 'category')
@@ -204,8 +246,12 @@ export class DiscoveryService {
       .andWhere('series.category IS NOT NULL')
       .getRawMany();
 
-    return {
+    const result = {
       categories: categories.map(c => c.category).filter(Boolean),
     };
+    
+    // Cache categories for 30 minutes (categories change infrequently)
+    await this.cacheManager.set(cacheKey, result, 1800000);
+    return result;
   }
 }

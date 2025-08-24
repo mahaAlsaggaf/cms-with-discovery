@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { DiscoveryService } from './discovery.service';
 import { Series } from '../cms/series/entities/series.entity';
 import { Episode } from '../cms/episodes/entities/episode.entity';
@@ -33,6 +34,11 @@ describe('DiscoveryService', () => {
   const mockEpisodeRepository = {
     createQueryBuilder: jest.fn(() => mockQueryBuilder),
     find: jest.fn(),
+  };
+
+  const mockCacheManager = {
+    get: jest.fn().mockResolvedValue(null), // Default to cache miss
+    set: jest.fn().mockResolvedValue(undefined),
   };
 
   const mockSeries: Series = {
@@ -79,6 +85,10 @@ describe('DiscoveryService', () => {
         {
           provide: getRepositoryToken(Episode),
           useValue: mockEpisodeRepository,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
         },
       ],
     }).compile();

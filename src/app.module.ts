@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { CmsModule } from './cms/cms.module';
 import { DiscoveryModule } from './discovery/discovery.module';
 import databaseConfig from './config/database.config';
+// Note: Swagger configuration is handled in main.ts using config/swagger.config.ts
 
 @Module({
   imports: [

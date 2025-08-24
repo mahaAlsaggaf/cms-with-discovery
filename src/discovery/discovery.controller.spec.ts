@@ -272,7 +272,7 @@ describe('DiscoveryController', () => {
 
       mockDiscoveryService.searchEpisodes.mockResolvedValue(mockResult);
 
-      const result = await controller.getRecentEpisodes('10', 'podcast');
+      const result = await controller.getRecentEpisodes('0', '10', 'podcast');
 
       expect(mockDiscoveryService.searchEpisodes).toHaveBeenCalledWith({
         query: '',

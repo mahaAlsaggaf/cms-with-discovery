@@ -10,22 +10,22 @@ export class EpisodesService {
   constructor(
     @InjectRepository(Episode)
     private episodeRepository: Repository<Episode>,
-  ) {}
+  ) { }
 
   async create(createEpisodeDto: CreateEpisodeDto): Promise<Episode> {
     const { seriesId, ...episodeData } = createEpisodeDto;
-    
+
     const episode = this.episodeRepository.create({
       ...episodeData,
       series: { id: seriesId } as any, // TypeORM will handle the relationship
     });
-    
+
     return await this.episodeRepository.save(episode);
   }
 
   async findAll(): Promise<Episode[]> {
     return await this.episodeRepository.find({
-      relations: ['series'],
+      relations: { series: true },
       order: { createdAt: 'DESC' },
     });
   }
@@ -35,28 +35,28 @@ export class EpisodesService {
       where: { id },
       relations: ['series'],
     });
-    
+
     if (!episode) {
       throw new NotFoundException(`Episode with ID ${id} not found`);
     }
-    
+
     return episode;
   }
 
   async update(id: string, updateEpisodeDto: UpdateEpisodeDto): Promise<Episode> {
     const episode = await this.findOne(id); // This will throw if not found
-    
+
     // Update the episode with new data
     Object.assign(episode, updateEpisodeDto);
-    
+
     return await this.episodeRepository.save(episode);
   }
 
   async remove(id: string): Promise<{ deleted: boolean; message: string }> {
     const episode = await this.findOne(id); // This will throw if not found
-    
+
     await this.episodeRepository.remove(episode);
-    
+
     return {
       deleted: true,
       message: `Episode '${episode.title}' has been deleted successfully`,
@@ -74,9 +74,9 @@ export class EpisodesService {
 
   async findBySeasonAndSeries(seriesId: number, seasonNumber: number): Promise<Episode[]> {
     return await this.episodeRepository.find({
-      where: { 
+      where: {
         series: { id: seriesId },
-        seasonNumber: seasonNumber 
+        seasonNumber: seasonNumber
       },
       relations: ['series'],
       order: { episodeNumber: 'ASC' },

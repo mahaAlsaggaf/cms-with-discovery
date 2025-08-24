@@ -26,7 +26,7 @@ export class EpisodesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get episode by ID', description: 'Retrieve a specific episode by its ID' })
-  @ApiParam({ name: 'id', description: 'Episode ID', example: '1' })
+  @ApiParam({ name: 'id', description: 'Episode UUID', example: '550e8400-e29b-41d4-a716-446655440000' })
   @ApiResponse({ status: 200, description: 'Episode found' })
   @ApiResponse({ status: 404, description: 'Episode not found' })
   findOne(@Param('id') id: string) {
@@ -35,7 +35,7 @@ export class EpisodesController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update episode', description: 'Update an existing episode' })
-  @ApiParam({ name: 'id', description: 'Episode ID', example: '1' })
+  @ApiParam({ name: 'id', description: 'Episode UUID', example: '550e8400-e29b-41d4-a716-446655440000' })
   @ApiResponse({ status: 200, description: 'Episode updated successfully' })
   @ApiResponse({ status: 404, description: 'Episode not found' })
   update(@Param('id') id: string, @Body() updateEpisodeDto: UpdateEpisodeDto) {
@@ -44,7 +44,7 @@ export class EpisodesController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete episode', description: 'Delete an episode by ID' })
-  @ApiParam({ name: 'id', description: 'Episode ID', example: '1' })
+  @ApiParam({ name: 'id', description: 'Episode UUID', example: '550e8400-e29b-41d4-a716-446655440000' })
   @ApiResponse({ status: 200, description: 'Episode deleted successfully' })
   @ApiResponse({ status: 404, description: 'Episode not found' })
   remove(@Param('id') id: string) {

@@ -5,15 +5,16 @@ export const swaggerConfig = new DocumentBuilder()
   .setTitle('Thmanyah CMS & Discovery API')
   .setDescription(
     'Content Management System with Discovery endpoints for Series (Podcasts/Documentaries) and Episodes (Videos). ' +
-    'This API provides comprehensive content management capabilities including search, filtering, and content discovery features.'
+    'Features include CRUD operations for content management, advanced search and filtering, caching for optimal performance, ' +
+    'and comprehensive content discovery capabilities.'
   )
   .setVersion('1.0')
   .setContact('Thmanyah Team', 'https://github.com/mahaAlsaggaf/cms-with-discovery', 'support@thmanyah.com')
   .setLicense('MIT', 'https://opensource.org/licenses/MIT')
   .addServer('http://localhost:3000', 'Development server')
-  .addTag('discovery', 'Content discovery and search endpoints with caching support')
-  .addTag('series', 'Series (Podcasts/Documentaries) CRUD operations')
-  .addTag('episodes', 'Episodes (Videos) CRUD operations')
+  .addTag('discovery', 'Content discovery and search endpoints with intelligent caching')
+  .addTag('series', 'Series management - Podcasts and Documentaries CRUD operations')
+  .addTag('episodes', 'Episodes management - Video content CRUD operations')
   .build();
 
 export function setupSwagger(app: INestApplication): void {
